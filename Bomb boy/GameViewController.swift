@@ -10,6 +10,8 @@ import UIKit
 import QuartzCore
 import SceneKit
 import SpriteKit
+import MultipeerConnectivity
+
 class GameViewController: UIViewController {
 
     var scene: SCNScene!
@@ -18,6 +20,12 @@ class GameViewController: UIViewController {
     var joyStick: Joystick!
     var spriteView: SKView!
     var spriteScene: SKScene!
+    
+    //Multipeer attributes
+    var peerID: MCPeerID!
+    var allPeers: [MCPeerID] = []
+    var mcSession: MCSession!
+    var mcAdvertiserAssistant: MCAdvertiserAssistant!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,11 +73,6 @@ class GameViewController: UIViewController {
         // configure the view
         scnView.backgroundColor = UIColor.black
         
-        
-        
-        
-
-        
         createLevel(width: 31, height: 21)
         
         player = Player()
@@ -89,7 +92,9 @@ class GameViewController: UIViewController {
         joyStick = Joystick()
         joyStick.position = CGPoint(x: 0, y: 0)
 
-        spriteScene.addChild(joyStick)
+        //spriteScene.addChild(joyStick)
+        
+        startHosting()
     }
     
     
@@ -151,6 +156,11 @@ class GameViewController: UIViewController {
                 levelNode.addChildNode(blockNode)
             }
         }
+        
+        //setup physics body
+        let pb = SCNPhysicsBody(type: .static, shape: nil)
+        levelNode.physicsBody = pb
+        
         scene.rootNode.addChildNode(levelNode)
         createFences(node: scene.rootNode, width: width, height: height)
         createPins(node: scene.rootNode, width: width, height: height)
@@ -181,6 +191,10 @@ class GameViewController: UIViewController {
             
             
         }
+        //setup physics body
+        let pb = SCNPhysicsBody(type: .static, shape: nil)
+        fencesNode.physicsBody = pb
+        
         node.addChildNode(fencesNode)
     }
     func createPins(node: SCNNode, width: CGFloat, height: CGFloat){
@@ -197,6 +211,11 @@ class GameViewController: UIViewController {
                 fencesNode.addChildNode(blockNode)
             }
         }
+        
+        //setup physics body
+        let pb = SCNPhysicsBody(type: .static, shape: nil)
+        fencesNode.physicsBody = pb
+        
         node.addChildNode(fencesNode)
     }
     func createFence()->SCNNode{
@@ -223,32 +242,77 @@ class GameViewController: UIViewController {
         
     }
 
+}
 
-    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?)  {
-//        for item in presses {
-//            if item.type == .select {
-//                self.view.backgroundColor = UIColor.green
-//            }
-//        }
+
+//Multipeer methods
+extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate {
+    
+    func startHosting(){
+        
+        //start host to search for controllers
+        peerID = MCPeerID(displayName: UIDevice.current.name)
+        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required)
+        mcSession.delegate = self
+        
+        mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "hws-kb", discoveryInfo: nil, session: mcSession)
+        mcAdvertiserAssistant.start()
     }
     
-    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-//        for item in presses {
-//            if item.type == .select {
-//                self.view.backgroundColor = UIColor.white
-//            }
-//        }
+    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+        switch state {
+        case .connected:
+            allPeers.append(peerID)
+            print("Connected: \(peerID.displayName)")
+            
+        case .connecting:
+            print("Connecting: \(peerID.displayName)")
+            
+        case .notConnected:
+            print("Not Connected: \(peerID.displayName)")
+        default:
+            fatalError("Error: entered in default case")
+        }
     }
     
-    override func pressesChanged(_ presses: Set<UIPress>, with event: UIPressesEvent?)  {
-        // ignored
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        if let message = Message.unarchive(data) {
+            DispatchQueue.main.async {
+                
+                switch message {
+                case .move(let dx, let dy):
+                    
+                    DispatchQueue.main.async {
+                        self.player.move(dx: dx, dy: dy)
+                    }
+                case .pressA:
+                    print("\(peerID.displayName) pressed button A")
+                case .pressB:
+                    print("\(peerID.displayName) pressed button B")
+                }
+            }
+        }
     }
     
-    override func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?)  {
-//        for item in presses {
-//            if item.type == .select {
-//                self.view.backgroundColor = UIColor.white
-//            }
-//        }
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+        
     }
+    
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+        
+    }
+    
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
+        
+    }
+    
+    func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
+        browserViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {
+        browserViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    
 }
