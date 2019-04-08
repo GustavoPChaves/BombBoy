@@ -12,6 +12,17 @@
 		ECF7B9932254D37600616C9B /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9922254D37600616C9B /* GameViewController.swift */; };
 		ECF7B9962254D37600616C9B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECF7B9942254D37600616C9B /* Main.storyboard */; };
 		ECF7B9982254D37800616C9B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECF7B9972254D37800616C9B /* Assets.xcassets */; };
+		ECF7B9A02254F9B800616C9B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B99F2254F9B800616C9B /* Player.swift */; };
+		ECF7B9A52254FA8600616C9B /* CGVector+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9A12254FA8500616C9B /* CGVector+Extensions.swift */; };
+		ECF7B9A62254FA8600616C9B /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9A22254FA8500616C9B /* CGFloat+Extensions.swift */; };
+		ECF7B9A72254FA8600616C9B /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9A32254FA8500616C9B /* CGSize+Extensions.swift */; };
+		ECF7B9A82254FA8600616C9B /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9A42254FA8500616C9B /* CGPoint+Extensions.swift */; };
+		ECF7B9AB2254FC4900616C9B /* SCNMath+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9AA2254FC4900616C9B /* SCNMath+Extensions.swift */; };
+		ECF7B9B022553D4700616C9B /* Controllable2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9AC22553D4600616C9B /* Controllable2D.swift */; };
+		ECF7B9B122553D4700616C9B /* RotateControllable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9AD22553D4600616C9B /* RotateControllable.swift */; };
+		ECF7B9B222553D4700616C9B /* MoveControllable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9AE22553D4700616C9B /* MoveControllable.swift */; };
+		ECF7B9B322553D4700616C9B /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7B9AF22553D4700616C9B /* Joystick.swift */; };
+		ECF7B9BA22553E1200616C9B /* flatDark06.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF7B9B522553E1200616C9B /* flatDark06.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +33,17 @@
 		ECF7B9952254D37600616C9B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ECF7B9972254D37800616C9B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ECF7B9992254D37800616C9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ECF7B99F2254F9B800616C9B /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		ECF7B9A12254FA8500616C9B /* CGVector+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGVector+Extensions.swift"; sourceTree = "<group>"; };
+		ECF7B9A22254FA8500616C9B /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
+		ECF7B9A32254FA8500616C9B /* CGSize+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
+		ECF7B9A42254FA8500616C9B /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
+		ECF7B9AA2254FC4900616C9B /* SCNMath+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNMath+Extensions.swift"; sourceTree = "<group>"; };
+		ECF7B9AC22553D4600616C9B /* Controllable2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controllable2D.swift; sourceTree = "<group>"; };
+		ECF7B9AD22553D4600616C9B /* RotateControllable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RotateControllable.swift; sourceTree = "<group>"; };
+		ECF7B9AE22553D4700616C9B /* MoveControllable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveControllable.swift; sourceTree = "<group>"; };
+		ECF7B9AF22553D4700616C9B /* Joystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
+		ECF7B9B522553E1200616C9B /* flatDark06.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flatDark06.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +62,10 @@
 			children = (
 				ECF7B98D2254D37600616C9B /* Bomb boy */,
 				ECF7B98C2254D37600616C9B /* Products */,
+				ECF7B9AC22553D4600616C9B /* Controllable2D.swift */,
+				ECF7B9AF22553D4700616C9B /* Joystick.swift */,
+				ECF7B9AE22553D4700616C9B /* MoveControllable.swift */,
+				ECF7B9AD22553D4600616C9B /* RotateControllable.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,14 +80,29 @@
 		ECF7B98D2254D37600616C9B /* Bomb boy */ = {
 			isa = PBXGroup;
 			children = (
+				ECF7B9A92254FA9000616C9B /* Extensions */,
 				ECF7B98E2254D37600616C9B /* AppDelegate.swift */,
 				ECF7B9902254D37600616C9B /* art.scnassets */,
 				ECF7B9922254D37600616C9B /* GameViewController.swift */,
+				ECF7B99F2254F9B800616C9B /* Player.swift */,
 				ECF7B9942254D37600616C9B /* Main.storyboard */,
 				ECF7B9972254D37800616C9B /* Assets.xcassets */,
+				ECF7B9B522553E1200616C9B /* flatDark06.png */,
 				ECF7B9992254D37800616C9B /* Info.plist */,
 			);
 			path = "Bomb boy";
+			sourceTree = "<group>";
+		};
+		ECF7B9A92254FA9000616C9B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				ECF7B9A22254FA8500616C9B /* CGFloat+Extensions.swift */,
+				ECF7B9A42254FA8500616C9B /* CGPoint+Extensions.swift */,
+				ECF7B9A32254FA8500616C9B /* CGSize+Extensions.swift */,
+				ECF7B9A12254FA8500616C9B /* CGVector+Extensions.swift */,
+				ECF7B9AA2254FC4900616C9B /* SCNMath+Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,6 +163,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECF7B9BA22553E1200616C9B /* flatDark06.png in Resources */,
 				ECF7B9912254D37600616C9B /* art.scnassets in Resources */,
 				ECF7B9982254D37800616C9B /* Assets.xcassets in Resources */,
 				ECF7B9962254D37600616C9B /* Main.storyboard in Resources */,
@@ -135,7 +177,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECF7B9A82254FA8600616C9B /* CGPoint+Extensions.swift in Sources */,
+				ECF7B9A52254FA8600616C9B /* CGVector+Extensions.swift in Sources */,
+				ECF7B9A62254FA8600616C9B /* CGFloat+Extensions.swift in Sources */,
 				ECF7B9932254D37600616C9B /* GameViewController.swift in Sources */,
+				ECF7B9B222553D4700616C9B /* MoveControllable.swift in Sources */,
+				ECF7B9B022553D4700616C9B /* Controllable2D.swift in Sources */,
+				ECF7B9AB2254FC4900616C9B /* SCNMath+Extensions.swift in Sources */,
+				ECF7B9A02254F9B800616C9B /* Player.swift in Sources */,
+				ECF7B9B122553D4700616C9B /* RotateControllable.swift in Sources */,
+				ECF7B9B322553D4700616C9B /* Joystick.swift in Sources */,
+				ECF7B9A72254FA8600616C9B /* CGSize+Extensions.swift in Sources */,
 				ECF7B98F2254D37600616C9B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

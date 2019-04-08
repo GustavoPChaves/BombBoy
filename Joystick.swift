@@ -37,8 +37,8 @@ class Joystick: SKNode {
         return .zero
     }
     
-    let thumbSize = CGSize(width: 40, height: 40)
-    let dpadSize = CGSize(width: 160, height: 160)
+    let thumbSize = CGSize(width: 0.04, height: 0.04)
+    let dpadSize = CGSize(width: 0.16, height: 0.16)
     
     private(set) var moveControllable: MoveControllable?
     private(set) var rotateControllable: RotateControllable?
@@ -87,7 +87,32 @@ class Joystick: SKNode {
     }
     
     // MARK: - Touches
-    
+    func move(touchPoint: CGPoint){
+            
+            let powx = pow((Double(touchPoint.x) - Double(self.thumbNode.position.x)), 2)
+            let powy = pow((Double(touchPoint.y) - Double(self.thumbNode.position.y)), 2)
+            let isInCircle = sqrt(powx + powy)
+            
+            if self.isTracking == true, isInCircle < Double(self.backdropNode.size.width) {
+                
+                if sqrtf(powf((Float(touchPoint.x) - Float(self.anchorPoint.x)), 2) + powf((Float(touchPoint.y) - Float(self.anchorPoint.y)), 2)) <= Float(self.thumbNode.size.width) {
+                    let moveDifference: CGPoint = CGPoint(x: touchPoint.x - self.anchorPoint.x, y: touchPoint.y - self.anchorPoint.y)
+                    self.thumbNode.position = CGPoint(x: self.anchorPoint.x + moveDifference.x, y: self.anchorPoint.y + moveDifference.y)
+                    
+                } else {
+                    let vX: Double = Double(touchPoint.x) - Double(self.anchorPoint.x)
+                    let vY: Double = Double(touchPoint.y) - Double(self.anchorPoint.y)
+                    let magV: Double = sqrt(vX*vX + vY*vY)
+                    let aX: Double = Double(self.anchorPoint.x) + vX / magV * Double(self.thumbNode.size.width)
+                    let aY: Double = Double(self.anchorPoint.y) + vY / magV * Double(self.thumbNode.size.width)
+                    self.thumbNode.position = CGPoint(x: CGFloat(aX), y: CGFloat(aY))
+                    
+                }
+            }
+            self.velocity = CGPoint(x: ((self.thumbNode.position.x - self.anchorPoint.x)), y: ((self.thumbNode.position.y - self.anchorPoint.y)))
+            self.angularVelocity = -atan2(self.thumbNode.position.x - self.anchorPoint.x, self.thumbNode.position.y - self.anchorPoint.y)
+            clampRestriction()
+    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let touchPoint: CGPoint = touch.location(in: self)
@@ -189,7 +214,8 @@ class Joystick: SKNode {
     private func resetVelocity() {
         self.isTracking = false
         self.velocity = .zero
-        self.angularVelocity = .zero
+        self.angularVelocity = CGFloat(0)
+        
         let easeOut: SKAction = SKAction.move(to: anchorPoint, duration: kThumbSpringBackDuration)
         easeOut.timingMode = SKActionTimingMode.easeOut
         self.thumbNode.run(easeOut)
@@ -201,14 +227,14 @@ class Joystick: SKNode {
     }
     
     private func clampRestriction(){
-        switch restriction {
-            case .horizontal:
-                thumbNode.position.y = CGFloat.clamp(thumbNode.position.y, lower: 0, upper: 0)
-            case .vertical:
-                thumbNode.position.x = CGFloat.clamp(thumbNode.position.x, lower: 0, upper: 0)
-            case .none:
-                return
-        }
+//        switch restriction {
+//            case .horizontal:
+//                thumbNode.position.y = CGFloat.clamp(thumbNode.position.y, lower: 0, upper: 0)
+//            case .vertical:
+//                thumbNode.position.x = CGFloat.clamp(thumbNode.position.x, lower: 0, upper: 0)
+//            case .none:
+//                return
+//        }
     }
     
 }
