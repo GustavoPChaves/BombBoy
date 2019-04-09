@@ -15,12 +15,12 @@ import MultipeerConnectivity
 class GameViewController: UIViewController {
 
     var scene: SCNScene!
-    
+    var physicsDelegate: PhysicsDetection!
     var player: Player!
     var joyStick: Joystick!
     var spriteView: SKView!
     var spriteScene: SKScene!
-    
+    var levelNode: SCNNode!
     //Multipeer attributes
     var peerID: MCPeerID!
     var allPeers: [MCPeerID] = []
@@ -29,7 +29,7 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        physicsDelegate = PhysicsDetection()
         // create a new scene
         scene = SCNScene()
         // create and add a camera to the scene
@@ -93,7 +93,8 @@ class GameViewController: UIViewController {
         joyStick.position = CGPoint(x: 0, y: 0)
 
         //spriteScene.addChild(joyStick)
-        
+        scene.physicsWorld.contactDelegate = physicsDelegate
+        scene.physicsWorld.gravity = SCNVector3(0,-50,0)
         startHosting()
     }
     
@@ -144,26 +145,31 @@ class GameViewController: UIViewController {
     }
     
     func createLevel(width: CGFloat, height: CGFloat){
-        let levelNode = SCNNode()
-        levelNode.name = "Floor"
+        levelNode = SCNNode()
+        levelNode.name = "Floors"
         let positions = [(-width/2), (-height/2)]
         for row in 0..<Int(width) {
             for column in 0..<Int(height){
                 let block = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
                 let blockNode = SCNNode()
+                blockNode.name = "Floor"
                 blockNode.geometry = block
                 blockNode.position = SCNVector3(positions[0] + CGFloat(row), -1, positions[1] + CGFloat(column))
+                blockNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+                blockNode.physicsBody?.isAffectedByGravity = false
+                blockNode.physicsBody?.categoryBitMask = ColliderType.ground
+                
                 levelNode.addChildNode(blockNode)
             }
         }
         
         //setup physics body
-        let pb = SCNPhysicsBody(type: .static, shape: nil)
-        levelNode.physicsBody = pb
+        //let pb = SCNPhysicsBody(type: .static, shape: nil)
+        //levelNode.physicsBody = pb
         
         scene.rootNode.addChildNode(levelNode)
         createFences(node: scene.rootNode, width: width, height: height)
-        createPins(node: scene.rootNode, width: width, height: height)
+        //createPins(node: scene.rootNode, width: width, height: height)
     }
     
     func createFences(node: SCNNode, width: CGFloat, height: CGFloat){
@@ -194,7 +200,7 @@ class GameViewController: UIViewController {
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
         fencesNode.physicsBody = pb
-        
+        fencesNode.physicsBody?.categoryBitMask = ColliderType.wall
         node.addChildNode(fencesNode)
     }
     func createPins(node: SCNNode, width: CGFloat, height: CGFloat){
@@ -206,6 +212,7 @@ class GameViewController: UIViewController {
             for column in 2..<Int(height-2) where column % 2 == 0 {
                 let block = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
                 let blockNode = SCNNode()
+                blockNode.name = "Pin"
                 blockNode.geometry = block
                 blockNode.position = SCNVector3(positions[0] + CGFloat(row), 0, positions[1] + CGFloat(column))
                 fencesNode.addChildNode(blockNode)
@@ -215,12 +222,13 @@ class GameViewController: UIViewController {
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
         fencesNode.physicsBody = pb
-        
+        fencesNode.physicsBody?.categoryBitMask = ColliderType.wall
         node.addChildNode(fencesNode)
     }
     func createFence()->SCNNode{
         let block = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
         let blockNode = SCNNode()
+        blockNode.name = "Wall"
         blockNode.geometry = block
         return blockNode
     }
@@ -314,5 +322,5 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
         browserViewController.dismiss(animated: true, completion: nil)
     }
     
-    
+
 }

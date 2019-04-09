@@ -11,12 +11,19 @@ import SceneKit
 
 class Player: SCNNode{
     
+    var checkGround: SCNNode!
+    var bodyNode: SCNNode!
     override init() {
         super.init()
-        geometry = SCNSphere(radius: 0.5)
+        //bodyNode = SCNNode()
+        //bodyNode.name = "name"
+        geometry = SCNSphere(radius: 0.3)
         var redMaterial = SCNMaterial()
         redMaterial.diffuse.contents = UIColor.red
         geometry?.materials = [redMaterial]
+        //self.addChildNode(bodyNode)
+        self.name = "Player"
+        setupCheck()
         
         setupPhysicBody()
     }
@@ -24,11 +31,29 @@ class Player: SCNNode{
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    func setupCheck(){
+        checkGround = SCNNode()
+        checkGround.geometry = SCNBox(width: 0.2, height: 2, length: 0.2, chamferRadius: 0)
+        checkGround.name = "Check"
+        var blackMaterial = SCNMaterial()
+        blackMaterial.diffuse.contents = UIColor.black
+        checkGround.geometry?.materials = [blackMaterial]
+        
+        checkGround.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
+        checkGround.physicsBody?.isAffectedByGravity = false
+        checkGround.physicsBody?.categoryBitMask = ColliderType.checkGround
+        checkGround.physicsBody?.contactTestBitMask = ColliderType.ground
+        checkGround.physicsBody?.collisionBitMask = ColliderType.none
+        checkGround.physicsBody?.angularVelocityFactor = SCNVector3(0,0,0)
+        self.addChildNode(checkGround)
+    }
     func setupPhysicBody(){
         let pb = SCNPhysicsBody(type: .dynamic, shape: nil)
         pb.mass = 100
+        pb.angularVelocityFactor = SCNVector3(0,0,0)
+        pb.restitution = 0
         self.physicsBody = pb
+        
     }
     
     func move(direction: SCNVector3){
