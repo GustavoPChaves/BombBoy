@@ -33,7 +33,7 @@ class GameViewController: UIViewController {
         // create a new scene
         scene = SCNScene()
         
-        scene.physicsWorld.gravity = SCNVector3(0, -50, 0)
+        scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.name = "Camera"
@@ -41,8 +41,8 @@ class GameViewController: UIViewController {
         scene.rootNode.addChildNode(cameraNode)
         
         // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 10, z: 15)
-        cameraNode.eulerAngles.x = -30 * .pi / 180
+        cameraNode.position = SCNVector3(x: 0, y: 18, z: 12)
+        cameraNode.eulerAngles.x = -60 * .pi / 180
         // create and add a light to the scene
         let lightNode = SCNNode()
         lightNode.name = "Directional Light"
@@ -162,7 +162,7 @@ class GameViewController: UIViewController {
         
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
-        pb.continuousCollisionDetectionThreshold = 10
+        pb.friction = 0
         levelNode.physicsBody = pb
         
         scene.rootNode.addChildNode(levelNode)
@@ -220,12 +220,11 @@ class GameViewController: UIViewController {
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
         pb.continuousCollisionDetectionThreshold = 100
-        //fencesNode.physicsBody = pb
-        
+        fencesNode.physicsBody = pb
         //node.addChildNode(fencesNode)
     }
     func createFence()->SCNNode{
-        let block = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+        let block = SCNBox(width: 1, height: 2, length: 1, chamferRadius: 0)
         let blockNode = SCNNode()
         blockNode.geometry = block
         return blockNode

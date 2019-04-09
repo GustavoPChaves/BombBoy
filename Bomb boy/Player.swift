@@ -16,7 +16,7 @@ class Player: SCNNode{
     override init() {
         super.init()
         geometry = SCNSphere(radius: 0.4)
-        var redMaterial = SCNMaterial()
+        let redMaterial = SCNMaterial()
         redMaterial.diffuse.contents = UIColor.red
         geometry?.materials = [redMaterial]
         
@@ -40,8 +40,8 @@ class Player: SCNNode{
     
     func move(dx: Float, dy: Float) {
         let speed: Float = 10
-        var xSpeed: Float = dx > 0 ? speed : -speed
-        var ySpeed: Float = dy > 0 ? speed : -speed
+        let xSpeed: Float = dx > 0 ? speed : -speed
+        let ySpeed: Float = dy > 0 ? speed : -speed
         
 //        if abs(dx) > abs(dy) || abs(dy) < 15  {
 //            ySpeed = 0
