@@ -39,7 +39,7 @@ class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
                 node = contact.nodeB
             }
             nodeToRemove.append(node)
-            node.geometry?.materials.first?.diffuse.contents = UIColor.gray
+            node.geometry?.materials.first?.diffuse.contents = "grassCrack.png"
             Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { (_) in
                 if let block = self.nodeToRemove.first{
                     self.nodeToRemove.remove(at: 0)
