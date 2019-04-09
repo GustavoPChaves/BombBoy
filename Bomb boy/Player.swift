@@ -8,22 +8,28 @@
 
 import Foundation
 import SceneKit
+import MultipeerConnectivity
 
 class Player: SCNNode{
     
     var checkGround: SCNNode!
-    var bodyNode: SCNNode!
+    var active = false {
+        didSet{
+            if active{
+                setupCheck()
+            }
+        }
+    }
+    
     override init() {
         super.init()
-        //bodyNode = SCNNode()
-        //bodyNode.name = "name"
         geometry = SCNSphere(radius: 0.3)
-        var redMaterial = SCNMaterial()
+        let redMaterial = SCNMaterial()
         redMaterial.diffuse.contents = UIColor.red
         geometry?.materials = [redMaterial]
         //self.addChildNode(bodyNode)
         self.name = "Player"
-        setupCheck()
+        //setupCheck()
         
         setupPhysicBody()
     }
@@ -35,7 +41,7 @@ class Player: SCNNode{
         checkGround = SCNNode()
         checkGround.geometry = SCNBox(width: 0.2, height: 2, length: 0.2, chamferRadius: 0)
         checkGround.name = "Check"
-        var blackMaterial = SCNMaterial()
+        let blackMaterial = SCNMaterial()
         blackMaterial.diffuse.contents = UIColor.black
         checkGround.geometry?.materials = [blackMaterial]
         
@@ -48,9 +54,10 @@ class Player: SCNNode{
         self.addChildNode(checkGround)
     }
     func setupPhysicBody(){
+    
         let pb = SCNPhysicsBody(type: .dynamic, shape: nil)
-        pb.mass = 100
         pb.angularVelocityFactor = SCNVector3(0,0,0)
+        pb.friction = 0
         pb.restitution = 0
         self.physicsBody = pb
         
@@ -61,18 +68,20 @@ class Player: SCNNode{
     }
     
     func move(dx: Float, dy: Float) {
-        var xSpeed: Float = dx > 0 ? 10 : -10
-        var ySpeed: Float = dy > 0 ? 10 : -10
+        let speed: Float = 10
+        var xSpeed: Float = dx > 0 ? speed : -speed
+        var ySpeed: Float = dy > 0 ? speed : -speed
         
         if abs(dx) > abs(dy) || abs(dy) < 15  {
             ySpeed = 0
         }
-        
+
         if abs(dy) > abs(dx) || abs(dx) < 15 {
             xSpeed = 0
         }
-        
-        self.physicsBody?.velocity = SCNVector3(xSpeed, 0, -ySpeed)
+    self.physicsBody?.velocity = SCNVector3(xSpeed, 0, -ySpeed)
+      // self.physicsBody?.applyForce(SCNVector3(xSpeed, 0, -ySpeed), asImpulse: false)
+
     }
     
     

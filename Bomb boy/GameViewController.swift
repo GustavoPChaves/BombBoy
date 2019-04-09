@@ -14,6 +14,8 @@ import MultipeerConnectivity
 
 class GameViewController: UIViewController {
 
+    var playerColors = [UIColor.red, UIColor.blue, UIColor.green, UIColor.yellow]
+    var startPoints: [SCNVector3] = [SCNVector3(-14.5, 0, -9.5),SCNVector3(13.5, 0, 8.5), SCNVector3(13.5, 0, -9.5), SCNVector3(-14.5, 0, 8.5)]
     var scene: SCNScene!
     var physicsDelegate: PhysicsDetection!
     var player: Player!
@@ -23,7 +25,7 @@ class GameViewController: UIViewController {
     var levelNode: SCNNode!
     //Multipeer attributes
     var peerID: MCPeerID!
-    var allPeers: [MCPeerID] = []
+    var allPlayers: [MCPeerID: Player] = [:]
     var mcSession: MCSession!
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
     
@@ -32,6 +34,8 @@ class GameViewController: UIViewController {
         physicsDelegate = PhysicsDetection()
         // create a new scene
         scene = SCNScene()
+        
+        scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.name = "Camera"
@@ -39,8 +43,8 @@ class GameViewController: UIViewController {
         scene.rootNode.addChildNode(cameraNode)
         
         // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 10, z: 15)
-        cameraNode.eulerAngles.x = -30 * .pi / 180
+        cameraNode.position = SCNVector3(x: 0, y: 18, z: 12)
+        cameraNode.eulerAngles.x = -60 * .pi / 180
         // create and add a light to the scene
         let lightNode = SCNNode()
         lightNode.name = "Directional Light"
@@ -77,7 +81,7 @@ class GameViewController: UIViewController {
         
         player = Player()
         player.position = SCNVector3(-0.5, 0, 0.5)
-        scene.rootNode.addChildNode(player)
+        //scene.rootNode.addChildNode(player)
         addGestures()
         
         
@@ -166,6 +170,7 @@ class GameViewController: UIViewController {
         //setup physics body
         //let pb = SCNPhysicsBody(type: .static, shape: nil)
         //levelNode.physicsBody = pb
+
         
         scene.rootNode.addChildNode(levelNode)
         createFences(node: scene.rootNode, width: width, height: height)
@@ -199,6 +204,7 @@ class GameViewController: UIViewController {
         }
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
+        pb.continuousCollisionDetectionThreshold = 10
         fencesNode.physicsBody = pb
         fencesNode.physicsBody?.categoryBitMask = ColliderType.wall
         node.addChildNode(fencesNode)
@@ -221,12 +227,13 @@ class GameViewController: UIViewController {
         
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
+        pb.continuousCollisionDetectionThreshold = 100
         fencesNode.physicsBody = pb
         fencesNode.physicsBody?.categoryBitMask = ColliderType.wall
         node.addChildNode(fencesNode)
     }
     func createFence()->SCNNode{
-        let block = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+        let block = SCNBox(width: 1, height: 2, length: 1, chamferRadius: 0)
         let blockNode = SCNNode()
         blockNode.name = "Wall"
         blockNode.geometry = block
@@ -270,7 +277,12 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         switch state {
         case .connected:
-            allPeers.append(peerID)
+            
+            let player = Player()
+            player.geometry?.materials.first?.diffuse.contents = playerColors[allPlayers.count]
+            player.position = startPoints[allPlayers.count]
+            scene.rootNode.addChildNode(player)
+            allPlayers[peerID] = player
             print("Connected: \(peerID.displayName)")
             
         case .connecting:
@@ -278,6 +290,9 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
             
         case .notConnected:
             print("Not Connected: \(peerID.displayName)")
+            allPlayers[peerID]?.removeFromParentNode()
+            allPlayers.removeValue(forKey: peerID)
+            
         default:
             fatalError("Error: entered in default case")
         }
@@ -291,7 +306,12 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
                 case .move(let dx, let dy):
                     
                     DispatchQueue.main.async {
-                        self.player.move(dx: dx, dy: dy)
+                        if let p = self.allPlayers[peerID] {
+                            if !p.active {
+                                p.active = true
+                            }
+                            p.move(dx: dx, dy: dy)
+                        }
                     }
                 case .pressA:
                     print("\(peerID.displayName) pressed button A")

@@ -24,11 +24,11 @@ struct ColliderType {
 class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
     //var player: CharacterNode?
     
-    var nodeToRemove = SCNNode()
+    var nodeToRemove = [SCNNode()]
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         print("bodyA:", contact.nodeA.name ?? "nil", "bodyB: ", contact.nodeB.name ?? "nil")
 
-        
+
 
         if contact.nodeA.name == "Check" || contact.nodeB.name == "Check"{
 
@@ -38,16 +38,31 @@ class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
             } else if contact.nodeB.name == "Floor"{
                 node = contact.nodeB
             }
-            nodeToRemove = node
+            nodeToRemove.append(node)
+            node.geometry?.materials.first?.diffuse.contents = UIColor.gray
+            Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { (_) in
+                if let block = self.nodeToRemove.first{
+                    self.nodeToRemove.remove(at: 0)
+                    block.removeFromParentNode()
+                    
+                }
+            }
         }
     }
     
-    func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
-        if contact.nodeA.name == "Check" || contact.nodeB.name == "Check"{
-            print("collision between check")
-            nodeToRemove.removeFromParentNode()
-        }
-    }
+//    func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
+//        if contact.nodeA.name == "Check" || contact.nodeB.name == "Check"{
+//            print("collision between check")
+//            var node = SCNNode()
+//            if contact.nodeA.name == "Floor"{
+//                node = contact.nodeA
+//            } else if contact.nodeB.name == "Floor"{
+//                node = contact.nodeB
+//            }
+//            node.removeFromParentNode()
+//
+//        }
+//    }
    
     
 }
