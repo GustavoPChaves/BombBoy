@@ -23,7 +23,7 @@ class GameViewController: UIViewController {
     
     //Multipeer attributes
     var peerID: MCPeerID!
-    var allPeers: [MCPeerID] = []
+    var allPlayers: [MCPeerID: Player] = [:]
     var mcSession: MCSession!
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
     
@@ -32,6 +32,8 @@ class GameViewController: UIViewController {
         
         // create a new scene
         scene = SCNScene()
+        
+        scene.physicsWorld.gravity = SCNVector3(0, -50, 0)
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.name = "Camera"
@@ -77,7 +79,7 @@ class GameViewController: UIViewController {
         
         player = Player()
         player.position = SCNVector3(-0.5, 0, 0.5)
-        scene.rootNode.addChildNode(player)
+        //scene.rootNode.addChildNode(player)
         addGestures()
         
         
@@ -95,6 +97,7 @@ class GameViewController: UIViewController {
         //spriteScene.addChild(joyStick)
         
         startHosting()
+        //allPlayers[peerID] = player
     }
     
     
@@ -159,6 +162,7 @@ class GameViewController: UIViewController {
         
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
+        pb.continuousCollisionDetectionThreshold = 10
         levelNode.physicsBody = pb
         
         scene.rootNode.addChildNode(levelNode)
@@ -193,6 +197,7 @@ class GameViewController: UIViewController {
         }
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
+        pb.continuousCollisionDetectionThreshold = 100
         fencesNode.physicsBody = pb
         
         node.addChildNode(fencesNode)
@@ -214,9 +219,10 @@ class GameViewController: UIViewController {
         
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
-        fencesNode.physicsBody = pb
+        pb.continuousCollisionDetectionThreshold = 100
+        //fencesNode.physicsBody = pb
         
-        node.addChildNode(fencesNode)
+        //node.addChildNode(fencesNode)
     }
     func createFence()->SCNNode{
         let block = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
@@ -262,7 +268,11 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         switch state {
         case .connected:
-            allPeers.append(peerID)
+            
+            let player = Player()
+            player.position = SCNVector3(-0.5, 0, 0.5)
+            scene.rootNode.addChildNode(player)
+            allPlayers[peerID] = player
             print("Connected: \(peerID.displayName)")
             
         case .connecting:
@@ -270,6 +280,9 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
             
         case .notConnected:
             print("Not Connected: \(peerID.displayName)")
+            allPlayers[peerID]?.removeFromParentNode()
+            allPlayers.removeValue(forKey: peerID)
+            
         default:
             fatalError("Error: entered in default case")
         }
@@ -283,7 +296,7 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
                 case .move(let dx, let dy):
                     
                     DispatchQueue.main.async {
-                        self.player.move(dx: dx, dy: dy)
+                        self.allPlayers[peerID]?.move(dx: dx, dy: dy)
                     }
                 case .pressA:
                     print("\(peerID.displayName) pressed button A")
