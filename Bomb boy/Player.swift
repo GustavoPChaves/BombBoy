@@ -11,8 +11,7 @@ import SceneKit
 import MultipeerConnectivity
 
 class Player: SCNNode{
-    var peerID: MCPeerID?
-    
+    var active = false
     override init() {
         super.init()
         geometry = SCNSphere(radius: 0.4)
@@ -31,6 +30,7 @@ class Player: SCNNode{
     
         let pb = SCNPhysicsBody(type: .dynamic, shape: nil)
         pb.friction = 0
+        pb.restitution = 0
         self.physicsBody = pb
     }
     
@@ -52,12 +52,7 @@ class Player: SCNNode{
 //        }
         
        self.physicsBody?.applyForce(SCNVector3(xSpeed, 0, -ySpeed), asImpulse: false)
-////
-//        if xSpeed == 0 && ySpeed == 0 {
-//          self.physicsBody?.velocity = SCNVector3.zero
-//        }
 
-        //self.physicsBody?.velocity = SCNVector3(xSpeed, 0, -ySpeed)
     }
     
     

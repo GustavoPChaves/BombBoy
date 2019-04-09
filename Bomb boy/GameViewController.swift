@@ -93,11 +93,8 @@ class GameViewController: UIViewController {
         
         joyStick = Joystick()
         joyStick.position = CGPoint(x: 0, y: 0)
-
-        //spriteScene.addChild(joyStick)
         
         startHosting()
-        //allPlayers[peerID] = player
     }
     
     
@@ -197,7 +194,7 @@ class GameViewController: UIViewController {
         }
         //setup physics body
         let pb = SCNPhysicsBody(type: .static, shape: nil)
-        pb.continuousCollisionDetectionThreshold = 100
+        pb.continuousCollisionDetectionThreshold = 10
         fencesNode.physicsBody = pb
         
         node.addChildNode(fencesNode)
@@ -295,7 +292,12 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
                 case .move(let dx, let dy):
                     
                     DispatchQueue.main.async {
-                        self.allPlayers[peerID]?.move(dx: dx, dy: dy)
+                        if let p = self.allPlayers[peerID] {
+                            if !p.active {
+                                p.active = true
+                            }
+                            p.move(dx: dx, dy: dy)
+                        }
                     }
                 case .pressA:
                     print("\(peerID.displayName) pressed button A")
