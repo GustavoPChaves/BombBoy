@@ -36,6 +36,7 @@ class GameViewController: UIViewController {
         scene = SCNScene()
         
         scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
+        scene.background.contents = UIImage(named: "background.jpg")
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.name = "Camera"
