@@ -30,12 +30,18 @@ class GameViewController: UIViewController {
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
     
     var numberOfPlayer = 0
-    
+    var paused = false
+    var imagePaused = UIImageView.init(image: UIImage(named: "play.png"))
+    var numberPlayConnected = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         physicsDelegate = PhysicsDetection()
         // create a new scene
         scene = SCNScene()
+        imagePaused.frame.origin.x = 553
+        imagePaused.frame.origin.y = 197
+        imagePaused.image = nil
+        view.addSubview(imagePaused)
         
         print(numberOfPlayer)
         scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
@@ -104,6 +110,7 @@ class GameViewController: UIViewController {
         scene.physicsWorld.contactDelegate = physicsDelegate
         scene.physicsWorld.gravity = SCNVector3(0,-50,0)
         startHosting()
+        scene.isPaused = true
     }
     
     
@@ -292,6 +299,11 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
             scene.rootNode.addChildNode(player)
             allPlayers[peerID] = player
             print("Connected: \(peerID.displayName)")
+            numberPlayConnected += 1
+            
+            if numberPlayConnected == numberOfPlayer{
+                scene.isPaused = false
+            }
             
         case .connecting:
             print("Connecting: \(peerID.displayName)")
@@ -322,6 +334,17 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
                         }
                     }
                 case .pressA:
+                    if self.paused == false{
+                        self.imagePaused.image = UIImage(named: "pause.png")
+                        self.scene.isPaused = true
+                        self.paused = true
+                    }else{
+                        self.imagePaused.image = nil
+                        self.scene.isPaused = false
+                        self.paused = false
+                    }
+                   
+                    
                     print("\(peerID.displayName) pressed button A")
                 case .pressB:
                     print("\(peerID.displayName) pressed button B")
