@@ -11,7 +11,7 @@ import SceneKit
 import MultipeerConnectivity
 
 class Player: SCNNode{
-    
+    var peerID: MCPeerID?
     var checkGround: SCNNode!
     var active = false {
         didSet{
@@ -20,6 +20,15 @@ class Player: SCNNode{
             }
         }
     }
+    
+    var canControl = true {
+        didSet{
+            if !canControl {
+                self.physicsBody?.velocity = SCNVector3(0, -20, 0)
+            }
+        }
+    }
+    var playerLost = false
     
     override init() {
         super.init()
@@ -39,11 +48,12 @@ class Player: SCNNode{
     }
     func setupCheck(){
         checkGround = SCNNode()
-        checkGround.geometry = SCNBox(width: 0.2, height: 2, length: 0.2, chamferRadius: 0)
+        
+        checkGround.geometry = SCNBox(width: 0.01, height: 2, length: 0.01, chamferRadius: 0)
         checkGround.name = "Check"
-        let blackMaterial = SCNMaterial()
-        blackMaterial.diffuse.contents = UIColor.black
-        checkGround.geometry?.materials = [blackMaterial]
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.clear
+        checkGround.geometry?.materials = [material]
         
         checkGround.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         checkGround.physicsBody?.isAffectedByGravity = false
@@ -54,11 +64,15 @@ class Player: SCNNode{
         self.addChildNode(checkGround)
     }
     func setupPhysicBody(){
-    
+        //guard let geo = self.geometry else {return}
+        //let shape = SCNPhysicsShape(geometry: geo, options: nil)
         let pb = SCNPhysicsBody(type: .dynamic, shape: nil)
+        
         pb.angularVelocityFactor = SCNVector3(0,0,0)
         pb.friction = 0
         pb.restitution = 0
+        pb.categoryBitMask = ColliderType.player
+        pb.contactTestBitMask = ColliderType.deathArea
         self.physicsBody = pb
         
     }
@@ -68,6 +82,7 @@ class Player: SCNNode{
     }
     
     func move(dx: Float, dy: Float) {
+        if !canControl {return}
         let speed: Float = 10
         var xSpeed: Float = dx > 0 ? speed : -speed
         var ySpeed: Float = dy > 0 ? speed : -speed
@@ -79,7 +94,10 @@ class Player: SCNNode{
         if abs(dy) > abs(dx) || abs(dx) < 15 {
             xSpeed = 0
         }
-    self.physicsBody?.velocity = SCNVector3(xSpeed, 0, -ySpeed)
+        
+        self.physicsBody?.velocity.x = xSpeed
+        self.physicsBody?.velocity.z = -ySpeed
+        //self.physicsBody?.velocity = SCNVector3(xSpeed, -10, -ySpeed)
       // self.physicsBody?.applyForce(SCNVector3(xSpeed, 0, -ySpeed), asImpulse: false)
 
     }

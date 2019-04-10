@@ -29,18 +29,31 @@ class GameViewController: UIViewController {
     var mcSession: MCSession!
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
     
+    
+    var pauseNode = SKNode()
+    var pauseTitleLabel = SKLabelNode(text: "Wating for players...")
+    var pauseSubTitleLabel = SKLabelNode(text: "Press A to start")
+    var pauseTimer = 2
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupScene()
+        
+        startHosting()
+    }
+    
+    func setupScene() {
         physicsDelegate = PhysicsDetection()
         // create a new scene
         scene = SCNScene()
         
-        scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.name = "Camera"
         cameraNode.camera = SCNCamera()
         scene.rootNode.addChildNode(cameraNode)
+        
         
         // place the camera
         cameraNode.position = SCNVector3(x: 0, y: 18, z: 12)
@@ -78,30 +91,53 @@ class GameViewController: UIViewController {
         scnView.backgroundColor = UIColor.black
         
         createLevel(width: 31, height: 21)
-        
-        player = Player()
-        player.position = SCNVector3(-0.5, 0, 0.5)
-        //scene.rootNode.addChildNode(player)
-        addGestures()
-        
+        createDeathArea()
         
         self.spriteScene = SKScene()
         self.spriteView = SKView(frame: view.frame)
         spriteView.backgroundColor = .clear
         spriteScene.backgroundColor = .clear
         spriteScene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        spriteScene.scaleMode = .resizeFill
         spriteView.presentScene(spriteScene)
         view.addSubview(spriteView)
         
-        joyStick = Joystick()
-        joyStick.position = CGPoint(x: 0, y: 0)
-
-        //spriteScene.addChild(joyStick)
+        
+        physicsDelegate.gameVC = self
         scene.physicsWorld.contactDelegate = physicsDelegate
         scene.physicsWorld.gravity = SCNVector3(0,-50,0)
-        startHosting()
+        
+        setupPauseLabel()
+        
+        scene.isPaused = true
+        
     }
     
+    func setupPauseLabel(){
+        
+        pauseTitleLabel.text = "Waiting for players..."
+        pauseSubTitleLabel.text = "Press A to start"
+        
+        pauseTitleLabel.position = CGPoint.zero
+        pauseTitleLabel.fontSize = 60
+        pauseTitleLabel.fontColor = UIColor.black
+        pauseTitleLabel.fontName = "HelveticaNeue-Bold"
+        pauseTitleLabel.zPosition = 10
+        pauseTitleLabel.removeFromParent()
+        pauseNode.addChild(pauseTitleLabel)
+        
+        pauseSubTitleLabel.position = CGPoint(x: 0, y: -80)
+        pauseSubTitleLabel.fontSize = 40
+        pauseSubTitleLabel.fontColor = UIColor.black
+        pauseSubTitleLabel.fontName = "HelveticaNeue"
+        pauseSubTitleLabel.zPosition = 10
+        pauseSubTitleLabel.removeFromParent()
+        pauseNode.addChild(pauseSubTitleLabel)
+        
+        pauseNode.removeFromParent()
+        spriteScene.addChild(pauseNode)
+        
+    }
     
     func addGestures(){
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapped(_:)))
@@ -175,6 +211,25 @@ class GameViewController: UIViewController {
         scene.rootNode.addChildNode(levelNode)
         createFences(node: scene.rootNode, width: width, height: height)
         //createPins(node: scene.rootNode, width: width, height: height)
+        
+        
+        
+    }
+    
+    func createDeathArea(){
+        let deathAreaNode = SCNNode()
+        deathAreaNode.name = "DeathArea"
+        let deathAreaBlock = SCNPlane(width: 50, height: 50)
+        
+        deathAreaNode.eulerAngles.x = -90 * .pi / 180
+        deathAreaNode.geometry = deathAreaBlock
+        deathAreaNode.position = SCNVector3(0, -0.6, 0)
+        deathAreaNode.geometry?.materials.first?.diffuse.contents = UIColor.clear
+        deathAreaNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+        deathAreaNode.physicsBody?.isAffectedByGravity = false
+        deathAreaNode.physicsBody?.categoryBitMask = ColliderType.deathArea
+        deathAreaNode.physicsBody?.collisionBitMask = ColliderType.none
+        scene.rootNode.addChildNode(deathAreaNode)
     }
     
     func createFences(node: SCNNode, width: CGFloat, height: CGFloat){
@@ -209,6 +264,7 @@ class GameViewController: UIViewController {
         fencesNode.physicsBody?.categoryBitMask = ColliderType.wall
         node.addChildNode(fencesNode)
     }
+    
     func createPins(node: SCNNode, width: CGFloat, height: CGFloat){
         let fencesNode = SCNNode()
         fencesNode.name = "Pins"
@@ -232,6 +288,7 @@ class GameViewController: UIViewController {
         fencesNode.physicsBody?.categoryBitMask = ColliderType.wall
         node.addChildNode(fencesNode)
     }
+    
     func createFence()->SCNNode{
         let block = SCNBox(width: 1, height: 2, length: 1, chamferRadius: 0)
         let blockNode = SCNNode()
@@ -240,6 +297,34 @@ class GameViewController: UIViewController {
         return blockNode
     }
     
+    
+    func checkForWinner() {
+        print("checking for winner...")
+        var countWinner = 0
+        var winner: Player?
+        
+        allPlayers.forEach { (id, player) in
+            if !player.playerLost {
+                countWinner += 1
+                winner = player
+            }
+        }
+        
+        print("count: \(countWinner)")
+        if let winPlayer = winner, countWinner == 1, allPlayers.count > 1 {
+
+            self.pauseTitleLabel.text = "WINNER: \(winPlayer.peerID?.displayName ?? "")"
+            self.pauseSubTitleLabel.text =  ""
+            
+            self.pauseNode.removeFromParent()
+            self.spriteScene.addChild(self.pauseNode)
+            
+            scene.rootNode.runAction(SCNAction.wait(duration: 2)) {
+                self.scene.isPaused = true
+                self.pauseSubTitleLabel.text =  "Press B to restart game"
+            }
+        }
+    }
     
     func collada2SCNNode(filepath:String) -> SCNNode {
         
@@ -254,6 +339,26 @@ class GameViewController: UIViewController {
         }
         
         return node
+        
+    }
+    
+    
+    func setupPlayers() {
+        
+        for i in allPlayers.enumerated() {
+            
+            let player = Player()
+            let peerID = i.element.key
+            
+            allPlayers[peerID] = player
+            player.active = false
+            player.canControl = true
+            player.position = startPoints[i.offset]
+            player.geometry?.materials.first?.diffuse.contents = playerColors[i.offset]
+            player.peerID = peerID
+            scene.rootNode.removeFromParentNode()
+            scene.rootNode.addChildNode(player)
+        }
         
     }
 
@@ -283,6 +388,7 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
             player.position = startPoints[allPlayers.count]
             scene.rootNode.addChildNode(player)
             allPlayers[peerID] = player
+            player.peerID = peerID
             print("Connected: \(peerID.displayName)")
             
         case .connecting:
@@ -313,13 +419,57 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
                             p.move(dx: dx, dy: dy)
                         }
                     }
-                case .pressA:
-                    print("\(peerID.displayName) pressed button A")
                 case .pressB:
-                    print("\(peerID.displayName) pressed button B")
+                    if self.scene.isPaused {
+                        self.setupScene()
+                        self.setupPlayers()
+                    }
+                case .pressA:
+                    DispatchQueue.main.async {
+                        
+                        if self.scene.isPaused {
+                            self.unpause()
+                            
+                        }else{
+
+                            self.scene.isPaused = true
+                            self.pauseTitleLabel.text = "GAME PAUSED"
+                            self.pauseSubTitleLabel.text = "Press A to continue. Press B to Restart Game"
+                            
+                            self.pauseNode.removeFromParent()
+                            self.spriteScene.addChild(self.pauseNode)
+                            
+                        }
+                    }
                 }
             }
         }
+    }
+    
+    func unpause(){
+        self.pauseTitleLabel.text = "3"
+        self.pauseSubTitleLabel.text = ""
+        
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
+      
+            self.pauseTitleLabel.text = "\(self.pauseTimer)"
+            
+            if self.pauseTimer == 0 {
+                self.pauseTitleLabel.text = "GO!"
+            }
+            
+            if self.pauseTimer <= -1 {
+                
+                print("completion unpause")
+                self.scene.isPaused = false
+                self.pauseNode.removeFromParent()
+                timer.invalidate()
+                self.pauseTimer = 3
+            }
+            
+            self.pauseTimer -= 1
+        }
+        
     }
     
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {

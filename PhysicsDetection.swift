@@ -12,25 +12,24 @@ import GameplayKit
 
 struct ColliderType {
     static let none = 0// collide with all
-     static let all = 1000 // collide with all
-     static let player = 1 // 000000001 = 1
-     static let ground = 2 // 000000010 = 2 // 000000100 = 4
-     static let checkGround = 3
-     static let gravity = 4
-     static let wall = 5
-     static let platform = 6
+    static let all = 1000 // collide with all
+    static let player = 1 // 000000001 = 1
+    static let ground = 2 // 000000010 = 2 // 000000100 = 4
+    static let checkGround = 3
+    static let gravity = 4
+    static let wall = 5
+    static let platform = 6
+    static let deathArea = 7
 }
 
 class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
     //var player: CharacterNode?
-    
+    var gameVC: GameViewController?
     var nodeToRemove = [SCNNode()]
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        print("bodyA:", contact.nodeA.name ?? "nil", "bodyB: ", contact.nodeB.name ?? "nil")
-
-
-
-        if contact.nodeA.name == "Check" || contact.nodeB.name == "Check"{
+        //print("bodyA:", contact.nodeA.name ?? "nil", "bodyB: ", contact.nodeB.name ?? "nil")
+        
+        if contact.nodeA.name == "Check" || contact.nodeB.name == "Check" {
 
             var node = SCNNode()
             if contact.nodeA.name == "Floor"{
@@ -40,29 +39,33 @@ class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
             }
             nodeToRemove.append(node)
             node.geometry?.materials.first?.diffuse.contents = UIColor.gray
-            Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { (_) in
+            
+            let waitAction = SCNAction.wait(duration: 3)
+            gameVC?.scene.rootNode.runAction(waitAction) {
                 if let block = self.nodeToRemove.first{
                     self.nodeToRemove.remove(at: 0)
                     block.removeFromParentNode()
                     
                 }
             }
+
         }
+        
+        if (contact.nodeA.name == "DeathArea" || contact.nodeB.name == "DeathArea") &&
+            (contact.nodeA.name == "Player" || contact.nodeB.name == "Player") {
+            print("CAIU")
+            var playerNode = Player()
+            if contact.nodeA.name == "Player" {
+                playerNode = contact.nodeA as! Player
+            } else {
+                playerNode = contact.nodeB as! Player
+            }
+            
+            playerNode.canControl = false
+            playerNode.playerLost = true
+            gameVC?.checkForWinner()
+        }
+        
     }
-    
-//    func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
-//        if contact.nodeA.name == "Check" || contact.nodeB.name == "Check"{
-//            print("collision between check")
-//            var node = SCNNode()
-//            if contact.nodeA.name == "Floor"{
-//                node = contact.nodeA
-//            } else if contact.nodeB.name == "Floor"{
-//                node = contact.nodeB
-//            }
-//            node.removeFromParentNode()
-//
-//        }
-//    }
-   
-    
+
 }
