@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B0727E1225D629A00A8A8CE /* wall.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727E0225D629A00A8A8CE /* wall.png */; };
+		2B0727E3225D62CD00A8A8CE /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727E2225D62CD00A8A8CE /* grass.png */; };
+		2B0727E5225D632900A8A8CE /* grassCrack.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727E4225D632900A8A8CE /* grassCrack.png */; };
+		2B0727E9225D67BD00A8A8CE /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727E8225D67BD00A8A8CE /* background.jpg */; };
 		6C5830E5225B752D00F3BCA4 /* ConnectivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5830E4225B752D00F3BCA4 /* ConnectivityService.swift */; };
 		6C5830E7225B754300F3BCA4 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5830E6225B754300F3BCA4 /* Message.swift */; };
 		EC7EB7AC225CBCAA00B96A1E /* PhysicsDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7EB7AB225CBCAA00B96A1E /* PhysicsDetection.swift */; };
@@ -29,6 +33,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B0727E0225D629A00A8A8CE /* wall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wall.png; sourceTree = "<group>"; };
+		2B0727E2225D62CD00A8A8CE /* grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grass.png; sourceTree = "<group>"; };
+		2B0727E4225D632900A8A8CE /* grassCrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grassCrack.png; sourceTree = "<group>"; };
+		2B0727E8225D67BD00A8A8CE /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
 		6C5830E4225B752D00F3BCA4 /* ConnectivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityService.swift; sourceTree = "<group>"; };
 		6C5830E6225B754300F3BCA4 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		EC7EB7AB225CBCAA00B96A1E /* PhysicsDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsDetection.swift; sourceTree = "<group>"; };
@@ -63,6 +71,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B0727DF225D61D700A8A8CE /* Textures */ = {
+			isa = PBXGroup;
+			children = (
+				2B0727E8225D67BD00A8A8CE /* background.jpg */,
+				2B0727E2225D62CD00A8A8CE /* grass.png */,
+				2B0727E4225D632900A8A8CE /* grassCrack.png */,
+				2B0727E0225D629A00A8A8CE /* wall.png */,
+			);
+			path = Textures;
+			sourceTree = "<group>";
+		};
 		6C5830E3225B74F900F3BCA4 /* JoystickConnection */ = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +115,7 @@
 		ECF7B98D2254D37600616C9B /* Bomb boy */ = {
 			isa = PBXGroup;
 			children = (
+				2B0727DF225D61D700A8A8CE /* Textures */,
 				6C5830E3225B74F900F3BCA4 /* JoystickConnection */,
 				ECF7B9A92254FA9000616C9B /* Extensions */,
 				ECF7B98E2254D37600616C9B /* AppDelegate.swift */,
@@ -180,9 +200,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B0727E5225D632900A8A8CE /* grassCrack.png in Resources */,
 				ECF7B9BA22553E1200616C9B /* flatDark06.png in Resources */,
 				ECF7B9912254D37600616C9B /* art.scnassets in Resources */,
+				2B0727E3225D62CD00A8A8CE /* grass.png in Resources */,
 				ECF7B9982254D37800616C9B /* Assets.xcassets in Resources */,
+				2B0727E9225D67BD00A8A8CE /* background.jpg in Resources */,
+				2B0727E1225D629A00A8A8CE /* wall.png in Resources */,
 				ECF7B9962254D37600616C9B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,9 +368,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Launch Image";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 89JG34L8Z2;
+				DEVELOPMENT_TEAM = 6XYJN7S9JQ;
 				INFOPLIST_FILE = "Bomb boy/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -364,9 +388,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Launch Image";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 89JG34L8Z2;
+				DEVELOPMENT_TEAM = 6XYJN7S9JQ;
 				INFOPLIST_FILE = "Bomb boy/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

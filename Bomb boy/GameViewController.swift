@@ -48,6 +48,8 @@ class GameViewController: UIViewController {
         // create a new scene
         scene = SCNScene()
         
+        scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
+        scene.background.contents = UIImage(named: "background.jpg")
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.name = "Camera"
@@ -114,6 +116,7 @@ class GameViewController: UIViewController {
     }
     
     func setupPauseLabel(){
+        
         
         pauseTitleLabel.text = "Waiting for players..."
         pauseSubTitleLabel.text = "Press A to start"
@@ -198,7 +201,7 @@ class GameViewController: UIViewController {
                 blockNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
                 blockNode.physicsBody?.isAffectedByGravity = false
                 blockNode.physicsBody?.categoryBitMask = ColliderType.ground
-                
+                blockNode.geometry?.firstMaterial?.diffuse.contents = "grass.png"
                 levelNode.addChildNode(blockNode)
             }
         }
@@ -243,6 +246,7 @@ class GameViewController: UIViewController {
                 for column in 0..<numberOfFences{
                     let fence = createFence()
                     fence.position = SCNVector3(positions[0] + CGFloat(column), 0, positions[1] + CGFloat(row))
+                    fence.geometry?.firstMaterial?.diffuse.contents = "wall.png"
                     fencesNode.addChildNode(fence)
                 }
             }
@@ -251,6 +255,9 @@ class GameViewController: UIViewController {
                 fence.position = SCNVector3(positions[0] + CGFloat(0), 0, positions[1] + CGFloat(row))
                 let fence2 = createFence()
                 fence2.position = SCNVector3(positions[0] + CGFloat(width-1), 0, positions[1] + CGFloat(row))
+                
+                fence.geometry?.firstMaterial?.diffuse.contents = "wall.png"
+                fence2.geometry?.firstMaterial?.diffuse.contents = "wall.png"
                 fencesNode.addChildNode(fence)
                 fencesNode.addChildNode(fence2)
             }

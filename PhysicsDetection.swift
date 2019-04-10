@@ -38,8 +38,8 @@ class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
                 node = contact.nodeB
             }
             nodeToRemove.append(node)
-            node.geometry?.materials.first?.diffuse.contents = UIColor.gray
-            
+            node.geometry?.materials.first?.diffuse.contents = "grassCrack.png"
+
             let waitAction = SCNAction.wait(duration: 3)
             gameVC?.scene.rootNode.runAction(waitAction) {
                 if let block = self.nodeToRemove.first{
