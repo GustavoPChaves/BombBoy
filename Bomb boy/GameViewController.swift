@@ -12,7 +12,7 @@ import SceneKit
 import SpriteKit
 import MultipeerConnectivity
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, SCNSceneRendererDelegate {
 
     var playerColors = [UIColor.red, UIColor.blue, UIColor.green, UIColor.yellow]
     var startPoints: [SCNVector3] = [SCNVector3(-14.5, 0, -9.5),SCNVector3(13.5, 0, 8.5), SCNVector3(13.5, 0, -9.5), SCNVector3(-14.5, 0, 8.5)]
@@ -29,12 +29,17 @@ class GameViewController: UIViewController {
     var mcSession: MCSession!
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
     
-    
+    var startingGame = true
     var pauseNode = SKSpriteNode(color: .white, size: CGSize.zero)
     var pauseTitleLabel = SKLabelNode(text: "Wating for players...")
     var pauseSubTitleLabel = SKLabelNode(text: "Press A to start")
     var pauseTimer = 2
-    
+
+    var numberOfPlayer = 0
+    var paused = false
+    var imagePaused = UIImageView.init(image: UIImage(named: "play.png"))
+    var numberPlayConnected = 0
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,8 +53,14 @@ class GameViewController: UIViewController {
         // create a new scene
         scene = SCNScene()
         
+        imagePaused.frame.origin.x = 553
+        imagePaused.frame.origin.y = 197
+        imagePaused.image = nil
+        view.addSubview(imagePaused)
+        
+        print(numberOfPlayer)
         scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
-        scene.background.contents = UIImage(named: "background.jpg")
+        scene.background.contents = UIImage(named: "lauchScreem.png")
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.name = "Camera"
@@ -108,21 +119,25 @@ class GameViewController: UIViewController {
         physicsDelegate.gameVC = self
         scene.physicsWorld.contactDelegate = physicsDelegate
         scene.physicsWorld.gravity = SCNVector3(0,-50,0)
-        
+
         setupPauseLabel()
-        
         scene.isPaused = true
         
+        if numberPlayConnected >= numberOfPlayer{
+            scene.isPaused = false
+            self.pauseNode.removeFromParent()
+        }
     }
+
     
     func setupPauseLabel(){
         pauseNode.size = CGSize(width: self.view.frame.width, height: 250)
         pauseNode.color = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.8)
         pauseNode.position = CGPoint.zero
-        
+
         pauseTitleLabel.text = "Waiting for players..."
-        pauseSubTitleLabel.text = "Press A to start"
-        
+        pauseSubTitleLabel.text = ""
+
         pauseTitleLabel.position = CGPoint.zero
         pauseTitleLabel.fontSize = 60
         pauseTitleLabel.fontColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
@@ -130,7 +145,7 @@ class GameViewController: UIViewController {
         pauseTitleLabel.zPosition = 10
         pauseTitleLabel.removeFromParent()
         pauseNode.addChild(pauseTitleLabel)
-        
+
         pauseSubTitleLabel.position = CGPoint(x: 0, y: -80)
         pauseSubTitleLabel.fontSize = 40
         pauseSubTitleLabel.fontColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
@@ -138,10 +153,10 @@ class GameViewController: UIViewController {
         pauseSubTitleLabel.zPosition = 10
         pauseSubTitleLabel.removeFromParent()
         pauseNode.addChild(pauseSubTitleLabel)
-        
+
         pauseNode.removeFromParent()
         spriteScene.addChild(pauseNode)
-        
+
     }
     
     func createLevel(width: CGFloat, height: CGFloat){
@@ -278,20 +293,20 @@ class GameViewController: UIViewController {
             self.spriteScene.addChild(self.pauseNode)
             
             scene.rootNode.runAction(SCNAction.wait(duration: 2)) {
-                self.scene.isPaused = true
                 self.pauseSubTitleLabel.text =  "Press B to restart game"
+                self.scene.isPaused = true
             }
         }else if countWinner == 0 {
-//            self.pauseTitleLabel.text = "DRAW"
-//            self.pauseSubTitleLabel.text =  ""
-//            
-//            self.pauseNode.removeFromParent()
-//            self.spriteScene.addChild(self.pauseNode)
-//            
-//            scene.rootNode.runAction(SCNAction.wait(duration: 2)) {
-//                self.scene.isPaused = true
-//                self.pauseSubTitleLabel.text =  "Press B to restart game"
-//            }
+            self.pauseTitleLabel.text = "DRAW"
+            self.pauseSubTitleLabel.text =  ""
+            
+            self.pauseNode.removeFromParent()
+            self.spriteScene.addChild(self.pauseNode)
+            
+            scene.rootNode.runAction(SCNAction.wait(duration: 2)) {
+                self.pauseSubTitleLabel.text =  "Press B to restart game"
+                self.scene.isPaused = true
+            }
         }
     }
     
@@ -314,7 +329,11 @@ class GameViewController: UIViewController {
         }
         
     }
+    
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        
 
+    }
 }
 
 
@@ -343,6 +362,12 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
             allPlayers[peerID] = player
             player.peerID = peerID
             print("Connected: \(peerID.displayName)")
+            numberPlayConnected += 1
+            
+            if numberPlayConnected == numberOfPlayer{
+                scene.isPaused = false
+                self.pauseNode.removeFromParent()
+            }
             
         case .connecting:
             print("Connecting: \(peerID.displayName)")
@@ -372,39 +397,53 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
                             p.move(dx: dx, dy: dy)
                         }
                     }
+
+                case .pressA:
+                    if self.paused == false{
+                        self.imagePaused.image = UIImage(named: "pause.png")
+                        self.scene.isPaused = true
+                        self.paused = true
+                    }else{
+                        self.imagePaused.image = nil
+                        self.scene.isPaused = false
+                        self.paused = false
+                    }
+                    
                 case .pressB:
+                    print("pressed B")
                     if self.scene.isPaused {
                         self.setupScene()
                         self.setupPlayers()
                     }
-                case .pressA:
-                    DispatchQueue.main.async {
-                        
-                        if self.scene.isPaused {
-                            self.unpause()
-                            
-                        }else{
-
-                            self.scene.isPaused = true
-                            self.pauseTitleLabel.text = "GAME PAUSED"
-                            self.pauseSubTitleLabel.text = "Press A to continue. Press B to Restart Game"
-                            
-                            self.pauseNode.removeFromParent()
-                            self.spriteScene.addChild(self.pauseNode)
-                            
-                        }
-                    }
+//                case .pressA:
+//                    DispatchQueue.main.async {
+//
+//                        if self.scene.isPaused {
+//                            self.unpause()
+//
+//                        }else{
+//
+//                            self.scene.isPaused = true
+//                            self.pauseTitleLabel.text = "GAME PAUSED"
+//                            self.pauseSubTitleLabel.text = "Press A to continue. Press B to Restart Game"
+//
+//                            self.pauseNode.removeFromParent()
+//                            self.spriteScene.addChild(self.pauseNode)
+//
+//                        }
+//                    }
                 }
             }
         }
     }
     
-    func unpause(){
+    func unpause() {
+        print("unpause \(self.pauseTimer)")
         self.pauseTitleLabel.text = "3"
         self.pauseSubTitleLabel.text = ""
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
-      
+            print("unpause timer \(self.pauseTimer)")
             self.pauseTitleLabel.text = "\(self.pauseTimer)"
             
             if self.pauseTimer == 0 {
@@ -447,3 +486,4 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
     
 
 }
+

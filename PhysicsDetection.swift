@@ -67,5 +67,7 @@ class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
         }
         
     }
-
+    
+    
+    
 }

@@ -97,8 +97,8 @@ class Player: SCNNode{
             xSpeed = 0
         }
         
-        self.physicsBody?.velocity.x = xSpeed
-        self.physicsBody?.velocity.z = -ySpeed
+        self.physicsBody?.velocity = SCNVector3(xSpeed, -30, -ySpeed)
+       
 
 
     }

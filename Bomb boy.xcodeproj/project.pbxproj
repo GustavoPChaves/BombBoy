@@ -10,7 +10,17 @@
 		2B0727E1225D629A00A8A8CE /* wall.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727E0225D629A00A8A8CE /* wall.png */; };
 		2B0727E3225D62CD00A8A8CE /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727E2225D62CD00A8A8CE /* grass.png */; };
 		2B0727E5225D632900A8A8CE /* grassCrack.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727E4225D632900A8A8CE /* grassCrack.png */; };
-		2B0727E9225D67BD00A8A8CE /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727E8225D67BD00A8A8CE /* background.jpg */; };
+		2B0727EF225D6FE800A8A8CE /* lauchScreem.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B0727EE225D6FE800A8A8CE /* lauchScreem.png */; };
+		2B072808225D809200A8A8CE /* number 4.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072800225D809100A8A8CE /* number 4.png */; };
+		2B072809225D809200A8A8CE /* Logo Run.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072801225D809100A8A8CE /* Logo Run.png */; };
+		2B07280A225D809200A8A8CE /* number 3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072802225D809200A8A8CE /* number 3.png */; };
+		2B07280B225D809200A8A8CE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072803225D809200A8A8CE /* play.png */; };
+		2B07280C225D809200A8A8CE /* Prancheta 35.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072804225D809200A8A8CE /* Prancheta 35.png */; };
+		2B07280D225D809200A8A8CE /* number 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072805225D809200A8A8CE /* number 2.png */; };
+		2B07280E225D809200A8A8CE /* bombit.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072806225D809200A8A8CE /* bombit.png */; };
+		2B07280F225D809200A8A8CE /* number 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072807225D809200A8A8CE /* number 1.png */; };
+		2B072811225D834E00A8A8CE /* SelectNumberPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B072810225D834E00A8A8CE /* SelectNumberPlayerViewController.swift */; };
+		2B072813225D8B6400A8A8CE /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B072812225D8B6400A8A8CE /* pause.png */; };
 		6C5830E5225B752D00F3BCA4 /* ConnectivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5830E4225B752D00F3BCA4 /* ConnectivityService.swift */; };
 		6C5830E7225B754300F3BCA4 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5830E6225B754300F3BCA4 /* Message.swift */; };
 		EC7EB7AC225CBCAA00B96A1E /* PhysicsDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7EB7AB225CBCAA00B96A1E /* PhysicsDetection.swift */; };
@@ -36,7 +46,17 @@
 		2B0727E0225D629A00A8A8CE /* wall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wall.png; sourceTree = "<group>"; };
 		2B0727E2225D62CD00A8A8CE /* grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grass.png; sourceTree = "<group>"; };
 		2B0727E4225D632900A8A8CE /* grassCrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grassCrack.png; sourceTree = "<group>"; };
-		2B0727E8225D67BD00A8A8CE /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
+		2B0727EE225D6FE800A8A8CE /* lauchScreem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lauchScreem.png; sourceTree = "<group>"; };
+		2B072800225D809100A8A8CE /* number 4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "number 4.png"; sourceTree = "<group>"; };
+		2B072801225D809100A8A8CE /* Logo Run.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Logo Run.png"; sourceTree = "<group>"; };
+		2B072802225D809200A8A8CE /* number 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "number 3.png"; sourceTree = "<group>"; };
+		2B072803225D809200A8A8CE /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
+		2B072804225D809200A8A8CE /* Prancheta 35.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Prancheta 35.png"; sourceTree = "<group>"; };
+		2B072805225D809200A8A8CE /* number 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "number 2.png"; sourceTree = "<group>"; };
+		2B072806225D809200A8A8CE /* bombit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bombit.png; sourceTree = "<group>"; };
+		2B072807225D809200A8A8CE /* number 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "number 1.png"; sourceTree = "<group>"; };
+		2B072810225D834E00A8A8CE /* SelectNumberPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectNumberPlayerViewController.swift; sourceTree = "<group>"; };
+		2B072812225D8B6400A8A8CE /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
 		6C5830E4225B752D00F3BCA4 /* ConnectivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityService.swift; sourceTree = "<group>"; };
 		6C5830E6225B754300F3BCA4 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		EC7EB7AB225CBCAA00B96A1E /* PhysicsDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsDetection.swift; sourceTree = "<group>"; };
@@ -74,7 +94,16 @@
 		2B0727DF225D61D700A8A8CE /* Textures */ = {
 			isa = PBXGroup;
 			children = (
-				2B0727E8225D67BD00A8A8CE /* background.jpg */,
+				2B072812225D8B6400A8A8CE /* pause.png */,
+				2B072806225D809200A8A8CE /* bombit.png */,
+				2B072801225D809100A8A8CE /* Logo Run.png */,
+				2B072807225D809200A8A8CE /* number 1.png */,
+				2B072805225D809200A8A8CE /* number 2.png */,
+				2B072802225D809200A8A8CE /* number 3.png */,
+				2B072800225D809100A8A8CE /* number 4.png */,
+				2B072803225D809200A8A8CE /* play.png */,
+				2B072804225D809200A8A8CE /* Prancheta 35.png */,
+				2B0727EE225D6FE800A8A8CE /* lauchScreem.png */,
 				2B0727E2225D62CD00A8A8CE /* grass.png */,
 				2B0727E4225D632900A8A8CE /* grassCrack.png */,
 				2B0727E0225D629A00A8A8CE /* wall.png */,
@@ -126,6 +155,7 @@
 				ECF7B9972254D37800616C9B /* Assets.xcassets */,
 				ECF7B9B522553E1200616C9B /* flatDark06.png */,
 				ECF7B9992254D37800616C9B /* Info.plist */,
+				2B072810225D834E00A8A8CE /* SelectNumberPlayerViewController.swift */,
 			);
 			path = "Bomb boy";
 			sourceTree = "<group>";
@@ -200,14 +230,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B07280D225D809200A8A8CE /* number 2.png in Resources */,
 				2B0727E5225D632900A8A8CE /* grassCrack.png in Resources */,
 				ECF7B9BA22553E1200616C9B /* flatDark06.png in Resources */,
 				ECF7B9912254D37600616C9B /* art.scnassets in Resources */,
 				2B0727E3225D62CD00A8A8CE /* grass.png in Resources */,
+				2B07280C225D809200A8A8CE /* Prancheta 35.png in Resources */,
+				2B072813225D8B6400A8A8CE /* pause.png in Resources */,
 				ECF7B9982254D37800616C9B /* Assets.xcassets in Resources */,
-				2B0727E9225D67BD00A8A8CE /* background.jpg in Resources */,
+				2B07280B225D809200A8A8CE /* play.png in Resources */,
 				2B0727E1225D629A00A8A8CE /* wall.png in Resources */,
+				2B07280F225D809200A8A8CE /* number 1.png in Resources */,
 				ECF7B9962254D37600616C9B /* Main.storyboard in Resources */,
+				2B07280E225D809200A8A8CE /* bombit.png in Resources */,
+				2B072808225D809200A8A8CE /* number 4.png in Resources */,
+				2B0727EF225D6FE800A8A8CE /* lauchScreem.png in Resources */,
+				2B07280A225D809200A8A8CE /* number 3.png in Resources */,
+				2B072809225D809200A8A8CE /* Logo Run.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,6 +263,7 @@
 				ECF7B9932254D37600616C9B /* GameViewController.swift in Sources */,
 				ECF7B9B222553D4700616C9B /* MoveControllable.swift in Sources */,
 				EC7EB7AC225CBCAA00B96A1E /* PhysicsDetection.swift in Sources */,
+				2B072811225D834E00A8A8CE /* SelectNumberPlayerViewController.swift in Sources */,
 				ECF7B9B022553D4700616C9B /* Controllable2D.swift in Sources */,
 				ECF7B9AB2254FC4900616C9B /* SCNMath+Extensions.swift in Sources */,
 				ECF7B9A02254F9B800616C9B /* Player.swift in Sources */,
