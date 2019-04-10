@@ -30,7 +30,7 @@ class GameViewController: UIViewController {
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
     
     
-    var pauseNode = SKNode()
+    var pauseNode = SKSpriteNode(color: .white, size: CGSize.zero)
     var pauseTitleLabel = SKLabelNode(text: "Wating for players...")
     var pauseSubTitleLabel = SKLabelNode(text: "Press A to start")
     var pauseTimer = 2
@@ -116,14 +116,16 @@ class GameViewController: UIViewController {
     }
     
     func setupPauseLabel(){
-        
+        pauseNode.size = CGSize(width: self.view.frame.width, height: 250)
+        pauseNode.color = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.8)
+        pauseNode.position = CGPoint.zero
         
         pauseTitleLabel.text = "Waiting for players..."
         pauseSubTitleLabel.text = "Press A to start"
         
         pauseTitleLabel.position = CGPoint.zero
         pauseTitleLabel.fontSize = 60
-        pauseTitleLabel.fontColor = UIColor.black
+        pauseTitleLabel.fontColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
         pauseTitleLabel.fontName = "HelveticaNeue-Bold"
         pauseTitleLabel.zPosition = 10
         pauseTitleLabel.removeFromParent()
@@ -131,7 +133,7 @@ class GameViewController: UIViewController {
         
         pauseSubTitleLabel.position = CGPoint(x: 0, y: -80)
         pauseSubTitleLabel.fontSize = 40
-        pauseSubTitleLabel.fontColor = UIColor.black
+        pauseSubTitleLabel.fontColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
         pauseSubTitleLabel.fontName = "HelveticaNeue"
         pauseSubTitleLabel.zPosition = 10
         pauseSubTitleLabel.removeFromParent()
@@ -140,51 +142,6 @@ class GameViewController: UIViewController {
         pauseNode.removeFromParent()
         spriteScene.addChild(pauseNode)
         
-    }
-    
-    func addGestures(){
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapped(_:)))
-        tapRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.playPause.rawValue)];
-        self.view.addGestureRecognizer(tapRecognizer)
-        
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.pan(_:)))
-        self.view.addGestureRecognizer(panRecognizer)
-        
-//        let directions: [UISwipeGestureRecognizer.Direction] = [.up, .right, .down, .left]
-//
-//        for i in 0..<4{
-//            let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(self.swipe(_:)))
-//            swipeRecognizer.direction = directions[i]
-//
-//            self.view.addGestureRecognizer(swipeRecognizer)
-//        }
-    }
-    
-    @objc func pan(_ sender: UIPanGestureRecognizer? = nil){
-        print(sender?.translation(in: self.view))
-        joyStick.move(touchPoint: sender!.translation(in: self.view))
-    }
-    @objc func tapped(_ sender: UITapGestureRecognizer? = nil){
-        print("foi")
-    }
-    @objc func swipe(_ sender: UISwipeGestureRecognizer? = nil){
-        
-        switch sender?.direction {
-        case UISwipeGestureRecognizer.Direction.up:
-            player.move(direction: SCNVector3(0,0,1))
-            print("up")
-        case UISwipeGestureRecognizer.Direction.right:
-            player.move(direction: SCNVector3(1,0,0))
-            print("right")
-        case UISwipeGestureRecognizer.Direction.down:
-            player.move(direction: SCNVector3(0,0,-1))
-            print("down")
-        case UISwipeGestureRecognizer.Direction.left:
-            player.move(direction: SCNVector3(-1,0,0))
-            print("left")
-        default:
-            print("nunca")
-        }
     }
     
     func createLevel(width: CGFloat, height: CGFloat){
@@ -205,11 +162,6 @@ class GameViewController: UIViewController {
                 levelNode.addChildNode(blockNode)
             }
         }
-        
-        //setup physics body
-        //let pb = SCNPhysicsBody(type: .static, shape: nil)
-        //levelNode.physicsBody = pb
-
         
         scene.rootNode.addChildNode(levelNode)
         createFences(node: scene.rootNode, width: width, height: height)
@@ -317,7 +269,6 @@ class GameViewController: UIViewController {
             }
         }
         
-        print("count: \(countWinner)")
         if let winPlayer = winner, countWinner == 1, allPlayers.count > 1 {
 
             self.pauseTitleLabel.text = "WINNER: \(winPlayer.peerID?.displayName ?? "")"
@@ -330,23 +281,18 @@ class GameViewController: UIViewController {
                 self.scene.isPaused = true
                 self.pauseSubTitleLabel.text =  "Press B to restart game"
             }
+        }else if countWinner == 0 {
+//            self.pauseTitleLabel.text = "DRAW"
+//            self.pauseSubTitleLabel.text =  ""
+//            
+//            self.pauseNode.removeFromParent()
+//            self.spriteScene.addChild(self.pauseNode)
+//            
+//            scene.rootNode.runAction(SCNAction.wait(duration: 2)) {
+//                self.scene.isPaused = true
+//                self.pauseSubTitleLabel.text =  "Press B to restart game"
+//            }
         }
-    }
-    
-    func collada2SCNNode(filepath:String) -> SCNNode {
-        
-        var node = SCNNode()
-        let scene = SCNScene(named: filepath)
-        var nodeArray = scene!.rootNode.childNodes
-        
-        for childNode in nodeArray {
-            
-            node.addChildNode(childNode as SCNNode)
-            
-        }
-        
-        return node
-        
     }
     
     

@@ -24,7 +24,8 @@ class Player: SCNNode{
     var canControl = true {
         didSet{
             if !canControl {
-                self.physicsBody?.velocity = SCNVector3(0, -20, 0)
+                
+                self.physicsBody?.velocity = SCNVector3(0, 0, 0)
             }
         }
     }
@@ -83,6 +84,7 @@ class Player: SCNNode{
     
     func move(dx: Float, dy: Float) {
         if !canControl {return}
+        print("moving")
         let speed: Float = 10
         var xSpeed: Float = dx > 0 ? speed : -speed
         var ySpeed: Float = dy > 0 ? speed : -speed
@@ -97,8 +99,7 @@ class Player: SCNNode{
         
         self.physicsBody?.velocity.x = xSpeed
         self.physicsBody?.velocity.z = -ySpeed
-        //self.physicsBody?.velocity = SCNVector3(xSpeed, -10, -ySpeed)
-      // self.physicsBody?.applyForce(SCNVector3(xSpeed, 0, -ySpeed), asImpulse: false)
+
 
     }
     
