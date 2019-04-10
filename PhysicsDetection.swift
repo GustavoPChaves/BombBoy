@@ -26,6 +26,7 @@ class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
     //var player: CharacterNode?
     var gameVC: GameViewController?
     var nodeToRemove = [SCNNode()]
+    
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         //print("bodyA:", contact.nodeA.name ?? "nil", "bodyB: ", contact.nodeB.name ?? "nil")
         
@@ -66,6 +67,10 @@ class PhysicsDetection: NSObject, SCNPhysicsContactDelegate {
             gameVC?.checkForWinner()
         }
         
+    }
+    
+    func physicsWorld(_ world: SCNPhysicsWorld, didUpdate contact: SCNPhysicsContact) {
+        print("bodyA:", contact.nodeA.name ?? "nil", "bodyB: ", contact.nodeB.name ?? "nil")
     }
     
     

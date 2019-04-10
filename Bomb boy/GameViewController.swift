@@ -12,7 +12,7 @@ import SceneKit
 import SpriteKit
 import MultipeerConnectivity
 
-class GameViewController: UIViewController, SCNSceneRendererDelegate {
+class GameViewController: UIViewController {
 
     var playerColors = [UIColor.red, UIColor.blue, UIColor.green, UIColor.yellow]
     var startPoints: [SCNVector3] = [SCNVector3(-14.5, 0, -9.5),SCNVector3(13.5, 0, 8.5), SCNVector3(13.5, 0, -9.5), SCNVector3(-14.5, 0, 8.5)]
@@ -58,8 +58,8 @@ class GameViewController: UIViewController, SCNSceneRendererDelegate {
         imagePaused.image = nil
         view.addSubview(imagePaused)
         
-        print(numberOfPlayer)
-        scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
+        
+        
         scene.background.contents = UIImage(named: "lauchScreem.png")
         // create and add a camera to the scene
         let cameraNode = SCNNode()
@@ -124,8 +124,9 @@ class GameViewController: UIViewController, SCNSceneRendererDelegate {
         scene.isPaused = true
         
         if numberPlayConnected >= numberOfPlayer{
-            scene.isPaused = false
-            self.pauseNode.removeFromParent()
+            DispatchQueue.main.async {
+                self.unpause()
+            }
         }
     }
 
@@ -329,11 +330,7 @@ class GameViewController: UIViewController, SCNSceneRendererDelegate {
         }
         
     }
-    
-    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        
 
-    }
 }
 
 
@@ -365,8 +362,11 @@ extension GameViewController: MCSessionDelegate, MCBrowserViewControllerDelegate
             numberPlayConnected += 1
             
             if numberPlayConnected == numberOfPlayer{
-                scene.isPaused = false
-                self.pauseNode.removeFromParent()
+                DispatchQueue.main.async {
+                    self.unpause()
+                }
+//                scene.isPaused = false
+//                self.pauseNode.removeFromParent()
             }
             
         case .connecting:
