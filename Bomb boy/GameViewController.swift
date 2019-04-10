@@ -29,14 +29,17 @@ class GameViewController: UIViewController {
     var mcSession: MCSession!
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
     
+    var numberOfPlayer = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         physicsDelegate = PhysicsDetection()
         // create a new scene
         scene = SCNScene()
         
+        print(numberOfPlayer)
         scene.physicsWorld.gravity = SCNVector3(0, -20, 0)
-        scene.background.contents = UIImage(named: "background.jpg")
+        scene.background.contents = UIImage(named: "lauchScreem.png")
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.name = "Camera"
